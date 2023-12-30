@@ -1,0 +1,57 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: reverse-proxy-config
+data:
+  default.conf: |
+    server {
+        listen 8080;
+        server_name localhost;
+
+        location / {
+            proxy_pass http://localhost;
+        }
+    }
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: $appname
+  labels: 
+    app: $appname
+spec:
+  containers:
+    - name: nginx-reverse-proxy
+      image: nginx:alpine
+      ports:
+        - containerPort: 8080
+      volumeMounts:
+        - name: reverse-proxy-conf
+          mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+    - name: $appname
+      image: $appname:$imagetag
+      ports:
+        - containerPort: 80
+  volumes:
+    - name: reverse-proxy-conf
+      configMap:
+        name: reverse-proxy-config
+    - name: custom-index
+      emptyDir: {}
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: $appname-service
+spec:
+  selector:
+    app: $appname
+  type: NodePort
+  ports:
+    - nodePort: $hostport
+      targetPort: 8080
+      port: 8080
