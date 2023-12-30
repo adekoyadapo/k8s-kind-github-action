@@ -11,6 +11,7 @@
 - [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 - [envsubst](https://manpages.ubuntu.com/manpages/focal/man1/envsubst.1.html), and
 - [Docker](https://www.docker.com/)
+- [ttl.sh](https://ttl.sh)
 
 ## Prerequisites
 
