@@ -38,7 +38,7 @@ jobs:
       run: |
         nodeport=$(kubectl get svc hello-world-service -o jsonpath='{.spec.ports[0].nodePort}')
         echo "The Hello World pod is accessible at NodePort: $nodeport"
-        echo "::set-output name=nodeport::$nodeport"
+        echo "nodeport=$nodeport" >> $GITHUB_OUTPUT
   
     - name: Check App with curl
       run: |
